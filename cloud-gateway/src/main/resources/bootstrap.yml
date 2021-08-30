@@ -1,0 +1,77 @@
+server:
+  port: 9527
+  servlet:
+    context-path: /
+spring:
+
+  # 方便外部配置
+  nacos:
+    server-addr: 127.0.0.1:8848
+    username: nacos
+    password: nacos
+    config:
+      #namespace: f94f2911-2668-4f56-aa13-c29a7b660429
+      #group: TDS_BASE
+      namespace: 03920850-f929-4244-b129-e288f7724abc
+      group: DEV_GROUP
+  sentinel:
+    dashboard: 127.0.0.1:8847
+
+  # alibaba 配置
+  cloud:
+    nacos:
+      discovery:
+        enabled: true
+        server-addr: ${spring.nacos.server-addr}
+        username: ${spring.nacos.user-name}
+        password: ${spring.nacos.password}
+        namespace: ${spring.nacos.config.namespace}
+      config:
+        file-extension: yaml
+        username: ${spring.nacos.user-name}
+        password: ${spring.nacos.password}
+        server-addr: ${spring.nacos.server-addr}
+
+        extension-configs[0]:
+          data-id: redis-dev.yml
+
+        group: ${spring.nacos.config.group}
+        namespace: ${spring.nacos.config.namespace}
+    sentinel:
+      transport:
+        dashboard: ${spring.sentinel.dashboard}
+      datasource:
+        dsl:
+          nacos:
+            server-addr: ${spring.nacos.server-addr}
+            dataId: ${spring.application.name}-sentinel
+            groupId: DEFAULT_GROUP
+            data-type: json
+            rule-type: flow
+      scg:
+        fallback:
+          mode: response
+          response-body: error!
+          response-status: 455
+    gateway:
+      routes:
+      - id: talent-system-service
+        uri: lb://talent-system-service
+        predicates:
+          - Path=/systemService/**
+      # 解决前缀转发问题
+      default-filters:
+        - StripPrefix=1
+
+  application:
+    #name: tds-gateway
+    name: cloud-gateway
+management:
+  health:
+    redis:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
