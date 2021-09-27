@@ -1,5 +1,7 @@
 package ldr;
 
+import org.springframework.boot.SpringApplication;
+
 /**
  * Created by Administrator on 2021/8/29.
  */

@@ -10,9 +10,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>cloud-gateway</module>
-        <module>cloud-nes</module>
-        <module>cloud-gateway</module>
         <module>cloud_nes</module>
+        <module>cloud-common</module>
+        <module>cloud-jdbc</module>
     </modules>
 
     <properties>
